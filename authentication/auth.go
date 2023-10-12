@@ -1,12 +1,14 @@
 package authentication
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"project_instant/config"
 	"project_instant/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 
@@ -46,6 +48,11 @@ func AdminAuthentication() gin.HandlerFunc {
 		useremail, err := ParseToken(tokenCookie)
 			if err != nil || useremail == "" {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
+			}
+
+			err = godotenv.Load(".env")
+			if err != nil {
+				log.Fatal("Error loading .env file")
 			}
 
 			if useremail!=os.Getenv("Admin_Email") {

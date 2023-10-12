@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"project_instant/authentication"
@@ -8,6 +9,7 @@ import (
 	"project_instant/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -167,6 +169,11 @@ func AdminLoginPage(c *gin.Context) {
 func AdminAuthentication(c *gin.Context){
 	username :=c.PostForm("admin")
 	password :=c.PostForm("password")
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	if username!=os.Getenv("Admin_Email")|| password !=os.Getenv("Admin_Password") {
 		c.HTML(http.StatusUnauthorized,"admin-login.html",gin.H{"error": "Invalid credentials"})
